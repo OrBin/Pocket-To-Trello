@@ -1,13 +1,14 @@
 import sys
 import json
 import requests
+import os
 from pocket import Pocket
 from datetime import datetime
 from bs4 import BeautifulSoup
 from trello import TrelloClient
 
 
-CONFIG_FILE_NAME = 'config.json'
+CONFIG_FILE_NAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.json')
 AUTH_DATA_KEY = 'authentication'
 
 # Reading configuration and authentication data
