@@ -49,3 +49,9 @@ You can create a cron job with the following configuration to run the app every 
 ```
 */10 * * * * python /path/to/repository/Pocket-To-Trello/main.py
 ```
+
+## External packages
+* [requests](http://docs.python-requests.org/en/master/)
+* [py-trello](https://github.com/sarumont/py-trello)
+* [pocket](https://github.com/tapanpandita/pocket)
+* [Beautiful Soup](https://www.crummy.com/software/BeautifulSoup/)
