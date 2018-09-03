@@ -56,29 +56,29 @@ if len(new_pocket_items['list']) == 0:
     sys.exit(0)
 
 for pocket_item_id, pocket_item_data in new_pocket_items['list'].items():
-    page_url = pocket_item_data['given_url']
-    logger.info(f'Found item {page_url}')
+    if pocket_item_data['status'] == '0':
+        page_url = pocket_item_data['given_url']
+        logger.info(f'Found item {page_url}')
 
-    # Getting page title
-    if page_url.endswith('.pdf'):
-        page_title = page_url.split('/')[-1].split('.')[0]
-    else:
-        try:
-            with requests.get(page_url) as page_response:
-                parsed_page = BeautifulSoup(page_response.text, 'html.parser')
-            page_title = parsed_page.title.text
-        except:
-            page_title = page_url
+        # Getting page title
+        if page_url.endswith('.pdf'):
+            page_title = page_url.split('/')[-1].split('.')[0]
+        else:
+            try:
+                with requests.get(page_url) as page_response:
+                    parsed_page = BeautifulSoup(page_response.text, 'html.parser')
+                page_title = parsed_page.title.text
+            except:
+                page_title = page_url
 
-    card = trello_list.add_card(name=page_title,
-                                desc=pocket_item_data['excerpt'])
-    logger.info(f'Created card \'{page_title}\')')
-    pocket_item_url = f'https://getpocket.com/a/read/{pocket_item_id}'
-    card.attach(url=pocket_item_url)
-    logger.info(f'Attached link {pocket_item_url} to item')
-    card.attach(url=page_url)
-    logger.info(f'Attached link {page_url} to item')
-
+        card = trello_list.add_card(name=page_title,
+                                    desc=pocket_item_data['excerpt'])
+        logger.info(f'Created card \'{page_title}\')')
+        pocket_item_url = f'https://getpocket.com/a/read/{pocket_item_id}'
+        card.attach(url=pocket_item_url)
+        logger.info(f'Attached link {pocket_item_url} to item')
+        card.attach(url=page_url)
+        logger.info(f'Attached link {page_url} to item')
 
 conf_data['pocket_last_checked'] = now_timestamp
 with open(CONFIG_FILE_NAME, 'w') as conf_file:
