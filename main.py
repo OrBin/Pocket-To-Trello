@@ -39,8 +39,8 @@ logger.info('Logged in to Pocket')
 
 # Logging in to Trello
 trello_client = TrelloClient(
-    api_key='7413612d698d185f50b2e775be180abe',
-    token='8a3e786371ceeba2d9f650a9a587772fce41a6fc7dccc7ad1747b6c402982494'
+    api_key=conf_data[AUTH_DATA_KEY]['trello_api_key'],
+    token=conf_data[AUTH_DATA_KEY]['trello_token']
 )
 trello_list = trello_client.get_list(conf_data['trello_list_id'])
 logger.info('Logged in to Trello')
