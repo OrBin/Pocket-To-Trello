@@ -81,11 +81,10 @@ for pocket_item_id, pocket_item_data in new_pocket_items['list'].items():
     card = trello_list.add_card(name=page_title,
                                 desc=pocket_item_data['excerpt'])
     logger.info(f'Created card \'{page_title}\')')
-    pocket_item_url = f'https://app.getpocket.com/read/{pocket_item_id}'
-    card.attach(url=pocket_item_url)
-    logger.info(f'Attached link {pocket_item_url} to item')
-    card.attach(url=page_url)
-    logger.info(f'Attached link {page_url} to item')
+    card.attach(name='Original article', url=page_url)
+    card.attach(name='Pocket (web)', url=f'https://app.getpocket.com/read/{pocket_item_id}')
+    card.attach(name='Pocket (mobile)', url=f'https://getpocket.com/a/read/{pocket_item_id}')
+    logger.info(f'Attached links to card')
 
 conf_data['pocket_last_checked'] = now_timestamp
 with open(CONFIG_FILE_NAME, 'w') as conf_file:
