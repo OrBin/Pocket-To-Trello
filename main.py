@@ -1,8 +1,9 @@
 import sys
 import json
 import requests
-import os
 import logging
+import os
+from os.path import join, dirname, abspath
 from logging.handlers import RotatingFileHandler
 from pocket import Pocket
 from datetime import datetime
@@ -10,12 +11,14 @@ from bs4 import BeautifulSoup
 from trello import TrelloClient
 
 
-CONFIG_FILE_NAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.json')
-LOG_FILE_NAME = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'log.txt')
+CONFIG_FILE_NAME = join(dirname(abspath(__file__)), 'config.json')
+LOGS_DIR_PATH = join(dirname(abspath(__file__)), 'logs')
+LOG_FILE_NAME = join(LOGS_DIR_PATH, 'pocket_to_trello.log')
 AUTH_DATA_KEY = 'authentication'
 
 
 # Enable logging
+os.makedirs(LOGS_DIR_PATH, exist_ok=True)
 file_handler = RotatingFileHandler(LOG_FILE_NAME, maxBytes=(1048576 * 5), backupCount=7)
 console_handler = logging.StreamHandler()
 
