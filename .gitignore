@@ -1,6 +1,7 @@
 # Project-specific ignores
 config.json
 log.txt
+.idea/
 
 # Created by https://www.gitignore.io/api/python,pycharm
 
