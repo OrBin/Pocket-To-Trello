@@ -16,9 +16,7 @@ AUTH_DATA_KEY = 'authentication'
 
 
 # Enable logging
-file_handler = RotatingFileHandler(
-    LOG_FILE_NAME, maxBytes=(1048576 * 5), backupCount=7
-)
+file_handler = RotatingFileHandler(LOG_FILE_NAME, maxBytes=(1048576 * 5), backupCount=7)
 console_handler = logging.StreamHandler()
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
@@ -56,29 +54,37 @@ if len(new_pocket_items['list']) == 0:
     sys.exit(0)
 
 for pocket_item_id, pocket_item_data in new_pocket_items['list'].items():
-    if pocket_item_data['status'] == '0':
-        page_url = pocket_item_data['given_url']
-        logger.info(f'Found item {page_url}')
 
-        # Getting page title
-        if page_url.endswith('.pdf'):
-            page_title = page_url.split('/')[-1].split('.')[0]
-        else:
-            try:
-                with requests.get(page_url) as page_response:
-                    parsed_page = BeautifulSoup(page_response.text, 'html.parser')
-                page_title = parsed_page.title.text
-            except:
-                page_title = page_url
+    # status - 0, 1, 2 - 1 if the item is archived - 2 if the item should be deleted
+    if not pocket_item_data['status'] == '0':
+        continue
 
-        card = trello_list.add_card(name=page_title,
-                                    desc=pocket_item_data['excerpt'])
-        logger.info(f'Created card \'{page_title}\')')
-        pocket_item_url = f'https://getpocket.com/a/read/{pocket_item_id}'
-        card.attach(url=pocket_item_url)
-        logger.info(f'Attached link {pocket_item_url} to item')
-        card.attach(url=page_url)
-        logger.info(f'Attached link {page_url} to item')
+    # The 'since' parameter on Pocket.get relates to update time only, but we want to filter by add time
+    item_add_timestamp = int(pocket_item_data['time_added'])
+    if item_add_timestamp < since_timestamp:
+        continue
+
+    page_url = pocket_item_data['given_url']
+    logger.info(f'Found item {page_url}')
+
+    # Getting page title
+    if page_url.endswith('.pdf'):
+        page_title = page_url.split('/')[-1].split('.')[0]
+    else:
+        try:
+            with requests.get(page_url) as page_response:
+                parsed_page = BeautifulSoup(page_response.text, 'html.parser')
+            page_title = parsed_page.title.text
+        except:
+            page_title = page_url
+
+    card = trello_list.add_card(name=page_title,
+                                desc=pocket_item_data['excerpt'])
+    logger.info(f'Created card \'{page_title}\')')
+    card.attach(name='Original article', url=page_url)
+    card.attach(name='Pocket (web)', url=f'https://app.getpocket.com/read/{pocket_item_id}')
+    card.attach(name='Pocket (mobile)', url=f'https://getpocket.com/a/read/{pocket_item_id}')
+    logger.info(f'Attached links to card')
 
 conf_data['pocket_last_checked'] = now_timestamp
 with open(CONFIG_FILE_NAME, 'w') as conf_file:
