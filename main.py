@@ -12,19 +12,12 @@ from trello import TrelloClient
 
 
 CONFIG_FILE_NAME = join(dirname(abspath(__file__)), 'config.json')
-LOGS_DIR_PATH = join(dirname(abspath(__file__)), 'logs')
-LOG_FILE_NAME = join(LOGS_DIR_PATH, 'pocket_to_trello.log')
 AUTH_DATA_KEY = 'authentication'
 
 
-# Enable logging
-os.makedirs(LOGS_DIR_PATH, exist_ok=True)
-file_handler = RotatingFileHandler(LOG_FILE_NAME, maxBytes=(1048576 * 5), backupCount=7)
-console_handler = logging.StreamHandler()
-
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO,
-                    handlers=[file_handler, console_handler])
+                    handlers=[logging.StreamHandler()])
 logger = logging.getLogger(__name__)
 
 # Reading configuration and authentication data
