@@ -24,7 +24,6 @@ Here is an example of how the initial configuration file should look:
     "pocket_consumer_key": "YOUR-POCKET-CONSUMER-KEY",
     "trello_api_key": "YOUR-TRELLO-API-KEY",
   },
-  "pocket_last_checked": 0,
   "trello_list_id": "YOUR-TRELLO-LIST-ID"
 }
 ```

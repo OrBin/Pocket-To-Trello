@@ -1,8 +1,9 @@
 # Project-specific ignores
 config.json
+pocket_last_checked.txt
 log.txt
 logs/**
-.idea/**
+.idea
 
 # Created by https://www.gitignore.io/api/python,pycharm
 
@@ -202,5 +203,3 @@ pip-selfcheck.json
 
 
 # End of https://www.gitignore.io/api/python,pycharm
-
-.idea

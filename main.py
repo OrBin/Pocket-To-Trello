@@ -11,6 +11,7 @@ from trello import TrelloClient
 
 
 CONFIG_FILE_NAME = Path(dirname(abspath(__file__))) / 'config.json'
+POCKET_LAST_CHECKED_FILE_NAME = Path(dirname(abspath(__file__))) / 'pocket_last_checked.txt'
 AUTH_DATA_KEY = 'authentication'
 
 
@@ -84,7 +85,7 @@ trello_client = load_trello_client(conf_data)
 trello_list = trello_client.get_list(conf_data['trello_list_id'])
 
 now_timestamp = int(datetime.now().timestamp())
-since_timestamp = conf_data['pocket_last_checked'] if 'pocket_last_checked' in conf_data else now_timestamp
+since_timestamp = int(POCKET_LAST_CHECKED_FILE_NAME.read_text()) if POCKET_LAST_CHECKED_FILE_NAME.exists() else now_timestamp
 
 new_pocket_items, _ = pocket_client.get(since=since_timestamp)
 logger.info('Fetched new Pocket items')
@@ -95,6 +96,4 @@ else:
     for pocket_item_id, pocket_item_data in new_pocket_items['list'].items():
         convert_single_item(pocket_item_id, pocket_item_data)
 
-conf_data['pocket_last_checked'] = now_timestamp
-with open(CONFIG_FILE_NAME, 'w') as conf_file:
-    json.dump(conf_data, conf_file, indent=2)
+POCKET_LAST_CHECKED_FILE_NAME.write_text(str(now_timestamp))
