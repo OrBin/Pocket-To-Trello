@@ -1,3 +1,5 @@
+from logging import Logger
+
 import boto3
 import botocore
 
@@ -8,7 +10,8 @@ OBJECT_KEY = "pocket_last_checked.txt"
 
 
 class S3StateManager(StateManager):
-    def __init__(self, bucket_name: str, region: str):
+    def __init__(self, logger: Logger, bucket_name: str, region: str):
+        super().__init__(logger)
         s3 = boto3.resource('s3', region_name=region)
         bucket = s3.Bucket(bucket_name)
         self._state_object = bucket.Object(OBJECT_KEY)
@@ -27,5 +30,5 @@ class S3StateManager(StateManager):
         resp = self._state_object.get()
         return resp['Body'].read().decode()
 
-    def write(self, new_state: str):
+    def _write(self, new_state: str):
         self._state_object.put(Body=new_state.encode())

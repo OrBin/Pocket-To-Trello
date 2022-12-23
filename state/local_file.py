@@ -13,5 +13,5 @@ class LocalFileStateManager(StateManager):
     def _read(self) -> str:
         return STATE_PATH.read_text()
 
-    def write(self, new_state: str):
+    def _write(self, new_state: str):
         STATE_PATH.write_text(new_state)

@@ -22,7 +22,7 @@ trello_client = load_trello_client(conf_data, logger)
 trello_list = trello_client.get_list(conf_data['trello_list_id'])
 
 now_timestamp = int(datetime.now().timestamp())
-state_manager = select_state_manager()
+state_manager = select_state_manager(logger)
 logger.info('Selected state manager: %s', state_manager.__class__.__name__)
 since_timestamp = int(state_manager.read(default=str(now_timestamp)))
 
