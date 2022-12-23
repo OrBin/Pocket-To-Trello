@@ -4,7 +4,7 @@ from pathlib import Path
 from typing import Dict, Any
 
 
-CONFIG_FILE_NAME = Path(dirname(abspath(__file__))) / 'config.json'
+CONFIG_FILE_NAME = Path(dirname(abspath(__file__))) / 'config' / 'config.json'
 AUTH_DATA_KEY = 'authentication'
 
 
