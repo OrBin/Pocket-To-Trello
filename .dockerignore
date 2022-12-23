@@ -4,3 +4,5 @@ __pycache__
 *.pyc
 log.txt
 config.json
+pocket_last_checked.txt
+venv/

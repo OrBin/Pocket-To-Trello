@@ -6,10 +6,9 @@ from datetime import datetime
 from config import load_config
 from convert import convert_single_item
 from pocket_client import load_pocket_client
+from state import select_state_manager
 from trello_client import load_trello_client
 
-
-POCKET_LAST_CHECKED_FILE_NAME = Path(dirname(abspath(__file__))) / 'pocket_last_checked.txt'
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
                     level=logging.INFO,
@@ -23,7 +22,9 @@ trello_client = load_trello_client(conf_data, logger)
 trello_list = trello_client.get_list(conf_data['trello_list_id'])
 
 now_timestamp = int(datetime.now().timestamp())
-since_timestamp = int(POCKET_LAST_CHECKED_FILE_NAME.read_text()) if POCKET_LAST_CHECKED_FILE_NAME.exists() else now_timestamp
+state_manager = select_state_manager()
+logger.info('Selected state manager: %s', state_manager.__name__)
+since_timestamp = int(state_manager.read(default=str(now_timestamp)))
 
 new_pocket_items, _ = pocket_client.get(since=since_timestamp)
 logger.info('Fetched new Pocket items')
@@ -34,4 +35,4 @@ else:
     for pocket_item_id, pocket_item_data in new_pocket_items['list'].items():
         convert_single_item(pocket_item_id, pocket_item_data, trello_list, logger, since_timestamp)
 
-POCKET_LAST_CHECKED_FILE_NAME.write_text(str(now_timestamp))
+state_manager.write(str(now_timestamp))
