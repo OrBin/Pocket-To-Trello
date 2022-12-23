@@ -23,7 +23,7 @@ trello_list = trello_client.get_list(conf_data['trello_list_id'])
 
 now_timestamp = int(datetime.now().timestamp())
 state_manager = select_state_manager()
-logger.info('Selected state manager: %s', state_manager.__name__)
+logger.info('Selected state manager: %s', state_manager.__class__.__name__)
 since_timestamp = int(state_manager.read(default=str(now_timestamp)))
 
 new_pocket_items, _ = pocket_client.get(since=since_timestamp)
