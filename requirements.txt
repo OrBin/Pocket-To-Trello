@@ -1,4 +1,4 @@
-requests==2.31.0
+requests==2.32.0
 py_trello==0.18.0
 pocket==0.3.6
 beautifulsoup4==4.11.1
