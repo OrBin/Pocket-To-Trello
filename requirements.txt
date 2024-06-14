@@ -1,5 +1,5 @@
 requests==2.32.0
-py-trello-api==0.20.0
+py_trello==0.20.1
 pocket==0.3.6
 beautifulsoup4==4.11.1
 boto3==1.26.36
